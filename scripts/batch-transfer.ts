@@ -102,12 +102,12 @@ const addresses = addressesFile.toString().split("\n");
 async function batchTransfer() {
   for (var i = 0; i < addresses.length - 1; i++) {
     const address = addresses[i];
-    const rawAmountIn = 100 * 1000000 // 1 SUCKCOIN multiplier
+    const rawAmountIn = 100 * 1000000 // 1 NEWB multiplier
     const randDeviation = Math.random() * (0.4 * rawAmountIn);
     const amountIn = rawAmountIn * 0.6 + (randDeviation - (randDeviation % 1000000));
     await transferTokens({
       destination: address,
-      tokenMint: "kRuVpT9jvnjfiBoVL8c9bp5ixTPBJRrq19ftdibpump",
+      tokenMint: "Dg2pYxYHedJaznYG8WJRXwqZwED6WgWafjerUjr4Veky",
       amount: amountIn
     });
   }
