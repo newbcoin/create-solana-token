@@ -7,6 +7,7 @@
     "create-metadata": "ts-node scripts/create-metadata.ts",
     "batch-transfer": "ts-node scripts/batch-transfer.ts",
     "batch-transfer-sol": "ts-node scripts/batch-transfer-sol.ts",
+    "batch-collect": "ts-node scripts/batch-collect.ts",
     "transfer-params": "ts-node scripts/transfer-params.ts"
   },
   "author": "Brian Gershon <briangershon@users.noreply.github.com>",
