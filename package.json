@@ -9,7 +9,8 @@
     "batch-transfer-sol": "ts-node scripts/batch-transfer-sol.ts",
     "batch-collect": "ts-node scripts/batch-collect.ts",
     "batch-collect-sol": "ts-node scripts/batch-collect-sol.ts",
-    "transfer-params": "ts-node scripts/transfer-params.ts"
+    "transfer-params": "ts-node scripts/transfer-params.ts",
+    "create-snapshot": "node scripts/create-snapshot.js"
   },
   "author": "Brian Gershon <briangershon@users.noreply.github.com>",
   "license": "MIT",
