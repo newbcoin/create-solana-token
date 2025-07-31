@@ -57,7 +57,7 @@ let keypair = Keypair.fromSeed(Uint8Array.from(privateKeySeed));
 console.log("Token send authority:", keypair.publicKey.toString());
 
 const addressesFile = fs.readFileSync(
-  "addresses.txt"
+  "/root/addresses.txt"
 );
 const addresses = addressesFile.toString().split("\n");
 
