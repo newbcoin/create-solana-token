@@ -23,18 +23,29 @@ import * as bs58 from "bs58";
 const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
 
 async function transferTokens({
+  secretKey,
   destination,
   tokenMint,
   amount,
   computeUnits,
   microLamports,
 }: {
+  secretKey: string;
   destination: string;
   tokenMint: string;
   amount: number;
   computeUnits: number;
   microLamports: number;
 }) {
+  if (!secretKey) {
+    console.log('please provide secret key');
+    return;
+  }
+  if (!destination) {
+    console.log('please provide destination');
+    return;
+  }
+  let keypair = Keypair.fromSecretKey(bs58.decode(secretKey));
   const mint = new PublicKey(tokenMint);
   const sourceATA = await getAssociatedTokenAddress(mint, keypair.publicKey);
   const destinationPublicKey = new PublicKey(destination);
@@ -91,20 +102,14 @@ async function transferTokens({
   }
 }
 
-const privateKeyFile = fs.readFileSync(
-  "/root/burner1-keypair.json"
-);
-let privateKeySeed = JSON.parse(privateKeyFile.toString()).slice(0, 32);
-let keypair = Keypair.fromSeed(Uint8Array.from(privateKeySeed));
-console.log("Token send authority:", keypair.publicKey.toString());
-
-const args = process.argv.slice(2);
-const address = args[0];
-const amountIn = parseInt(args[1], 10);
-const computeUnits = parseInt(args[2], 10);
-const microLamports = parseInt(args[3], 10);
+const secretKey = process.argv[2];
+const address = process.argv[3];
+const amountIn = !isNaN(Number(process.argv[4])) ? Number(process.argv[4]) : (10000 * 1000000) // 1 NEWB multiplier
+const computeUnits = !isNaN(Number(process.argv[5])) ? Number(process.argv[5]) : 150000
+const microLamports = !isNaN(Number(process.argv[6])) ? Number(process.argv[6]) : 3000
 
 transferTokens({
+  secretKey: secretKey,
   destination: address,
   tokenMint: "Dg2pYxYHedJaznYG8WJRXwqZwED6WgWafjerUjr4Veky",
   amount: amountIn,
