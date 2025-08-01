@@ -62,6 +62,7 @@ async function batchCollect() {
 
     const collectionAddress = "7s7BdRGAH9EjwFriPYFtDdFynXsuTVwLs5k9rXiX6GJy";
     const balance = await connection.getBalance(keypair.publicKey);
+    if (balance <= 0) continue;
     await transferTokens({
       destination: collectionAddress,
       amount: balance,
