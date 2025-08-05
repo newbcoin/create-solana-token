@@ -22,12 +22,14 @@ import * as bs58 from "bs58";
 
 const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
 
-async function transferTokens({
+async function addTransferInstructions({
   destination,
   amount,
+  transaction,
 }: {
   destination: string;
   amount: number;
+  transaction: Transaction;
 }) {
   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
     units: 10000,
@@ -35,7 +37,7 @@ async function transferTokens({
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
     microLamports: 3000,
   });
-  const transferTokensTransaction = new Transaction()
+  transaction
   .add(
     SystemProgram.transfer({
       fromPubkey: keypair.publicKey,
@@ -43,9 +45,6 @@ async function transferTokens({
       lamports: amount,
     })
   );
-  await sendAndConfirmTransaction(connection, transferTokensTransaction, [
-    keypair,
-  ]);
   console.log("Sent " + amount + " SOL to address:", destination);
 }
 
@@ -62,13 +61,27 @@ const addressesFile = fs.readFileSync(
 const addresses = addressesFile.toString().split("\n");
 
 async function batchTransfer() {
+  const batchSize = 10;
+  let transaction = new Transaction();
   for (var i = 0; i < addresses.length - 1; i++) {
     const address = addresses[i];
     const amountIn = 10 * 1000000 // 0.001 SOL multiplier
-    await transferTokens({
+    await addTransferInstructions({
       destination: address,
-      amount: amountIn
+      amount: amountIn,
+      transaction: transaction
     });
+    if (transaction.instructions.length == batchSize) {
+      await sendAndConfirmTransaction(connection, transaction, [
+        keypair,
+      ]);
+      transaction = new Transaction();
+    }
+  }
+  if (transaction.instructions.length > 0) {
+    await sendAndConfirmTransaction(connection, transaction, [
+      keypair,
+    ]);
   }
 }
 
